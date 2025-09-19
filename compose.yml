@@ -22,7 +22,7 @@ services:
 
   ghost:
     # Do not alter this without updating the Tinybird Sync container as well
-    image: ghost:${GHOST_VERSION:-6-alpine}
+    build: .
     restart: always
     expose:
       - "127.0.0.1:${GHOST_PORT:-2368}:2368"
@@ -38,6 +38,13 @@ services:
       database__connection__user: ${DATABASE_USER:-ghost}
       database__connection__password: ${DATABASE_PASSWORD:?DATABASE_PASSWORD environment variable is required}
       database__connection__database: ghost
+      storage__active: s3
+      storage__s3__region: auto
+      storage__s3__bucket: ghost
+      storage__s3__accessKeyId: ${S3_ACCESS_KEY_ID}
+      storage__s3__secretAccessKey: ${S3_SECRET_ACCESS_KEY}
+      storage__s3__assetHost: ${S3_ASSET_HOST}
+      storage__s3__endpoint: ${S3_ENDPOINT}
       tinybird__tracker__endpoint: https://${DOMAIN:?DOMAIN environment variable is required}/.ghost/analytics/api/v1/page_hit
       tinybird__adminToken: ${TINYBIRD_ADMIN_TOKEN:-}
       tinybird__workspaceId: ${TINYBIRD_WORKSPACE_ID:-}
